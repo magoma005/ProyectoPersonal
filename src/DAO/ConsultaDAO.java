@@ -56,19 +56,28 @@ public class ConsultaDAO {
 
     // Convierte una consulta a una línea de texto para guardar en el archivo
     private String toLineaArchivo(ConsultaDTO dto) {
-        return dto.getFecha() + "," +
+        return dto.getId() + "," +                 // NUEVO: incluir ID
+                dto.getFecha() + "," +
                 dto.getMascota() + "," +
                 dto.getServicio() + "," +
-                dto.getDiagnostico(); // Los datos se separan por comas
+                dto.getDiagnostico();
     }
+
 
     // Convierte una línea de texto del archivo a un objeto ConsultaDTO
     private ConsultaDTO desdeLineaArchivo(String linea) {
-        String[] partes = linea.split(","); // Separa la línea por comas
-        if (partes.length != 4) return null; // Si no hay exactamente 4 partes, es inválida
+        String[] partes = linea.split(",");
+        if (partes.length != 5) return null; // Ahora esperamos 5 campos
 
-        return new ConsultaDTO(partes[0], partes[1], partes[2], partes[3]); // Crea el objeto
+        return new ConsultaDTO(
+                partes[0], // id
+                partes[1], // fecha
+                partes[2], // mascota
+                partes[3], // servicio
+                partes[4]  // diagnostico
+        );
     }
+
 
     // Reescribe el archivo completo con todas las consultas actuales
     private void sobrescribirArchivo() {

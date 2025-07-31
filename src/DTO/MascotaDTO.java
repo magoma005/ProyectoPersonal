@@ -2,15 +2,16 @@ package DTO;
 
 import java.io.Serializable;
 
-//DTO para encapsular los datos de una mascota.
-
+// DTO para encapsular los datos de una mascota.
 public class MascotaDTO implements Serializable {
+    private String id;       // <-- nuevo campo
     private String nombre;
     private String especie;
     private int edad;
     private String clave;
 
-    public MascotaDTO(String nombre, String especie, int edad, String clave) {
+    public MascotaDTO(String id, String nombre, String especie, int edad, String clave) {
+        setId(id);
         setNombre(nombre);
         setEspecie(especie);
         setEdad(edad);
@@ -18,12 +19,19 @@ public class MascotaDTO implements Serializable {
     }
 
     // === Getters ===
+    public String getId() { return id; }
     public String getNombre() { return nombre; }
     public String getEspecie() { return especie; }
     public int getEdad() { return edad; }
     public String getClave() { return clave; }
 
     // === Setters con validación ===
+    public void setId(String id) {
+        if (id == null || id.isBlank())
+            throw new IllegalArgumentException("❌ El ID no puede estar vacío.");
+        this.id = id;
+    }
+
     public void setNombre(String nombre) {
         if (nombre == null || nombre.isBlank())
             throw new IllegalArgumentException("❌ El nombre no puede estar vacío.");

@@ -127,7 +127,7 @@ public class FormConsulta extends JFrame {
 
         // === Tabla de Consultas ===
         modeloTabla = new DefaultTableModel(
-                new String[]{"Fecha", "Mascota", "Servicio", "Diagnóstico"}, 0); // <-- columnas actualizadas
+                new String[]{"Código", "Fecha", "Mascota", "Servicio", "Diagnóstico"}, 0);// <-- columnas actualizadas
         tablaConsultas = new JTable(modeloTabla);
         tablaConsultas.setFillsViewportHeight(true); // Ajuste automático
         tablaConsultas.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -170,7 +170,14 @@ public class FormConsulta extends JFrame {
 
         try {
             // Crea una nueva consulta con los datos
-            ConsultaDTO consulta = new ConsultaDTO(fecha, mascota, servicio, diagnostico);
+            ConsultaDTO consulta = new ConsultaDTO(
+                    util.IDGenerator.generarCodigoConsulta(), // nuevo ID
+                    fecha,
+                    mascota,
+                    servicio,
+                    diagnostico
+            );
+
             controlador.agendarConsulta(consulta); // Guarda en el sistema
 
             JOptionPane.showMessageDialog(this, "✅ Consulta agendada correctamente.");
@@ -187,11 +194,13 @@ public class FormConsulta extends JFrame {
         List<ConsultaDTO> consultas = controlador.obtenerConsultas();
         for (ConsultaDTO c : consultas) {
             modeloTabla.addRow(new Object[]{
+                    c.getCodigo(),
                     c.getFecha(),
                     c.getMascota(),
                     c.getServicio(),
                     c.getDiagnostico()
             });
+
         }
     }
 
@@ -247,7 +256,8 @@ public class FormConsulta extends JFrame {
             }
 
             // Crea un nuevo objeto con los datos actualizados
-            ConsultaDTO dtoActualizada = new ConsultaDTO(fecha, mascota, servicio, diagnostico);
+            String id = (String) modeloTabla.getValueAt(filaSeleccionada, 0); // Obtener ID de la tabla
+            ConsultaDTO dtoActualizada = new ConsultaDTO(id, fecha, mascota, servicio, diagnostico);
 
             // Llama al controlador para actualizar la consulta
             String mensaje = controlador.actualizarConsulta(filaSeleccionada, dtoActualizada);
